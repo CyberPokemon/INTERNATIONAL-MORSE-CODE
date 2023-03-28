@@ -5,9 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.method.ScrollingMovementMethod;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -21,6 +26,7 @@ public class MainActivity6 extends AppCompatActivity {
     TextView t2;
     Button convert,copytext;
     String a[][]= new String[47][3];
+    ForegroundColorSpan fcsred = new ForegroundColorSpan(Color.RED);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +43,15 @@ public class MainActivity6 extends AppCompatActivity {
                 str1=t1.getText().toString();
                 str2=convert2(str1).trim();
 
+                if(str2.equals("ERROR: CODE NOT INPUTED"))
+                {
+                    SpannableString ss = new SpannableString(str2);
+
+
+                    ss.setSpan(fcsred, 0, str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    t2.setText(ss);
+                }
+                else
                 t2.setText(str2);
             }
         });
@@ -53,11 +68,27 @@ public class MainActivity6 extends AppCompatActivity {
             }
         });
 
+        t2.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+
+                ClipData clip= ClipData.newPlainText("COPIED TEXT",str2);
+                clipboard.setPrimaryClip(clip);
+
+                Toast.makeText(MainActivity6.this,"COPIED",Toast.LENGTH_SHORT).show();
+
+                return true;
+            }
+        });
+
+
     }
 
     private void setupUIviews()
     {
         t1=findViewById(R.id.textView9);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         convert=findViewById(R.id.button2);
         t2= findViewById(R.id.textView10);
         t2.setMovementMethod(new ScrollingMovementMethod());
@@ -166,6 +197,13 @@ public class MainActivity6 extends AppCompatActivity {
         char ch;
         String nstr="",w="";
         str.trim();
+
+        if(str.equals(""))
+        {
+            return "ERROR: CODE NOT INPUTED";
+        }
+
+
         for(i=0;i<str.length();i++)
         {
             ch=str.charAt(i);
@@ -181,7 +219,13 @@ public class MainActivity6 extends AppCompatActivity {
                     continue;
                 for(j=0;j<47;j++)
                 {
-                    if(a[j][1].equals(w))
+                    if(a[j][1].equals(w) && j==42)
+                    {
+                        //new
+                        nstr=nstr+".";
+                        f=1;
+                    }
+                    else if(a[j][1].equals(w))
                     {
                         nstr=nstr+a[j][0];
                         f=1;

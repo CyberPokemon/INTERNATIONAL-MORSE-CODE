@@ -5,9 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.method.ScrollingMovementMethod;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -22,6 +27,8 @@ public class MainActivity5 extends AppCompatActivity {
     Button b1,b2;
 
     String a[][]= new String[47][3];
+
+    ForegroundColorSpan fcsred = new ForegroundColorSpan(Color.RED);
 
 
     @Override
@@ -46,8 +53,18 @@ public class MainActivity5 extends AppCompatActivity {
                 str1=t1.getText().toString();
                 str1=str1.trim();
 
+
                 str2=convert(str1);
 
+                if(str2.equals("ERROR: TEXT NOT INPUTED"))
+                {
+                    SpannableString ss = new SpannableString(str2);
+
+
+                    ss.setSpan(fcsred, 0, str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    t2.setText(ss);
+                }
+                else
                 t2.setText(str2);
 
             }
@@ -65,6 +82,20 @@ public class MainActivity5 extends AppCompatActivity {
             }
         });
 
+        t2.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+
+                ClipData clip= ClipData.newPlainText("COPIED TEXT",str2);
+                clipboard.setPrimaryClip(clip);
+
+                Toast.makeText(MainActivity5.this,"COPIED",Toast.LENGTH_SHORT).show();
+
+                return true;
+            }
+        });
+
 
 
 
@@ -75,7 +106,7 @@ public class MainActivity5 extends AppCompatActivity {
         String nstr="";
         if(str.equals(""))
         {
-            return "TEXT NOT INPUTED";
+            return "ERROR: TEXT NOT INPUTED";
         }
         str=" "+str;
         int l =str.length();
@@ -102,6 +133,11 @@ public class MainActivity5 extends AppCompatActivity {
                 else if(ch==48)
                 {
                     nstr=""+nstr+a[35][1]+" ";
+                }
+                else if(ch=='.')
+                {
+                    //new
+                    nstr=""+nstr+a[42][1]+" ";
                 }
                 else
                 {
@@ -208,6 +244,7 @@ public class MainActivity5 extends AppCompatActivity {
     private void setupUIviews()
     {
         t1=findViewById(R.id.editTextTextPersonName);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         b1=findViewById(R.id.button);
         t2= findViewById(R.id.textView7);
         t2.setMovementMethod(new ScrollingMovementMethod());

@@ -2,11 +2,16 @@ package com.example.internationalmorsecode;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.method.ScrollingMovementMethod;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -16,10 +21,13 @@ public class MainActivity3 extends AppCompatActivity {
     Spinner spinner;
     TextView printingarea;
     Button b1;
+    AutoCompleteTextView autoCompleteTextView;
+    ArrayAdapter<String> adapteritems;
 
     String menu[] = {"INCLUDING SPECIAL SIGNALS", "NOT INCLUDING SPECIAL SIGNALS"};
-    int pos;
+    int pos=-1;
     String a[][]= new String[47][3];
+    ForegroundColorSpan fcsred = new ForegroundColorSpan(Color.RED);
     void fill()
     {
         int i;
@@ -120,9 +128,21 @@ public class MainActivity3 extends AppCompatActivity {
         setupUIviews();
         fill();
 
+        adapteritems=new ArrayAdapter<String>(this,R.layout.list_itam,menu);
+        autoCompleteTextView.setAdapter(adapteritems);
+
+        autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                pos=i;
+            }
+        });
+/*
         ArrayAdapter<String> adapter= new ArrayAdapter<String>(MainActivity3.this, android.R.layout.simple_spinner_item,menu);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         spinner.setAdapter(adapter);
+
+
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -138,9 +158,13 @@ public class MainActivity3 extends AppCompatActivity {
             }
         });
 
+ */
+
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                printingarea.scrollTo(0,0);
                 display();
             }
         });
@@ -154,7 +178,8 @@ public class MainActivity3 extends AppCompatActivity {
 
     private void setupUIviews()
     {
-        spinner=findViewById(R.id.spinner);
+        autoCompleteTextView=findViewById(R.id.autocompletetextview);
+        //spinner=findViewById(R.id.spinner);
         b1=findViewById(R.id.printbutton);
         printingarea= findViewById(R.id.textView6);
         printingarea.setMovementMethod(new ScrollingMovementMethod());
@@ -166,6 +191,15 @@ public class MainActivity3 extends AppCompatActivity {
     {
         String printing ="";
         int i;
+        if(pos==-1)
+        {
+            String error ="ERROR: INPUT NOT SELECTED";
+            SpannableString ss = new SpannableString(error);
+            ss.setSpan(fcsred,0,error.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            printingarea.setText(ss);
+            return;
+        }
         if(pos==0)
         {
             printing="ALPHABET \t MORSE CODE \n";

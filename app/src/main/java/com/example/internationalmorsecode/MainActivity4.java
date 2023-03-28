@@ -1,7 +1,9 @@
 package com.example.internationalmorsecode;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -9,6 +11,7 @@ import android.text.Spanned;
 import android.text.method.ScrollingMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -33,8 +36,11 @@ public class MainActivity4 extends AppCompatActivity {
 
     int select1=-1, select2=-1,reset1=0,numOfQues=0;
 
-    int choice1=0,choice2=0,random1=0;
+    int choice1=0,choice2=0,random1=0,countcorrect=0;
     Button start,check;
+    double time1, time2,timsum=0,timeavg=0;
+
+    int execution=0;
 
     boolean startenable=true,checkenable=false;
     TextView question,remarks,noq;
@@ -98,14 +104,14 @@ public class MainActivity4 extends AppCompatActivity {
 
                     if ((select1 == -1 || select2 == -1 || (numberofquestion.getText().toString()).equals("")) && startenable == true) {
                         if (select1 == -1 && select2 == -1 && (numberofquestion.getText().toString()).equals("")) {
-                            errormessage = "ALL FIELDS NOT FILLED";
+                            errormessage = "ERROR: ALL FIELDS NOT FILLED";
                             SpannableString ss = new SpannableString(errormessage);
 
 
                             ss.setSpan(fcsred, 0, errormessage.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                             remarks.setText(ss);
                         } else if (select1 == -1 && select2 == -1 && ((numberofquestion.getText().toString()).equals("") == false)) {
-                            errormessage = "SPECIAL SIGNALS AND PRACTICE MODE NOT FILLED";
+                            errormessage = "ERROR: SPECIAL SIGNALS AND PRACTICE MODE NOT FILLED";
                             SpannableString ss = new SpannableString(errormessage);
 
 
@@ -113,7 +119,7 @@ public class MainActivity4 extends AppCompatActivity {
                             remarks.setText(ss);
 
                         } else if (select1 == -1 && select2 != -1 && (numberofquestion.getText().toString()).equals("")) {
-                            errormessage = "SPECIAL SIGNALS AND NUMBER OF QUESTIONS NOT FILLED";
+                            errormessage = "ERROR: SPECIAL SIGNALS AND NUMBER OF QUESTIONS NOT FILLED";
                             SpannableString ss = new SpannableString(errormessage);
 
 
@@ -121,7 +127,7 @@ public class MainActivity4 extends AppCompatActivity {
                             remarks.setText(ss);
 
                         } else if (select1 == -1 && select2 != -1 && ((numberofquestion.getText().toString()).equals("") == false)) {
-                            errormessage = "SPECIAL SIGNALS NOT FILLED";
+                            errormessage = "ERROR: SPECIAL SIGNALS NOT FILLED";
                             SpannableString ss = new SpannableString(errormessage);
 
 
@@ -129,7 +135,7 @@ public class MainActivity4 extends AppCompatActivity {
                             remarks.setText(ss);
 
                         } else if (select1 != -1 && select2 == -1 && (numberofquestion.getText().toString()).equals("")) {
-                            errormessage = " PRACTICE MODE AND NUMBER OF QUESTIONS NOT FILLED";
+                            errormessage = "ERROR: PRACTICE MODE AND NUMBER OF QUESTIONS NOT FILLED";
                             SpannableString ss = new SpannableString(errormessage);
 
 
@@ -137,7 +143,7 @@ public class MainActivity4 extends AppCompatActivity {
                             remarks.setText(ss);
 
                         } else if (select1 != -1 && select2 == -1 && ((numberofquestion.getText().toString()).equals("") == false)) {
-                            errormessage = "PRACTICE MODE NOT FILLED";
+                            errormessage = "ERROR: PRACTICE MODE NOT FILLED";
                             SpannableString ss = new SpannableString(errormessage);
 
 
@@ -145,7 +151,7 @@ public class MainActivity4 extends AppCompatActivity {
                             remarks.setText(ss);
 
                         } else if (select1 != -1 && select2 != -1 && (numberofquestion.getText().toString()).equals("")) {
-                            errormessage = "NUMBER OF QUESTIONS NOT FILLED";
+                            errormessage = "ERROR: NUMBER OF QUESTIONS NOT FILLED";
                             SpannableString ss = new SpannableString(errormessage);
 
 
@@ -156,7 +162,7 @@ public class MainActivity4 extends AppCompatActivity {
 
                     } else {
                         if ((Integer.parseInt(numberofquestion.getText().toString()) <= 0) && startenable == true) {
-                            errormessage = "INVALID NUMBER OF QUESTIONS";
+                            errormessage = "ERROR: INVALID NUMBER OF QUESTIONS";
                             SpannableString ss = new SpannableString(errormessage);
 
 
@@ -164,7 +170,7 @@ public class MainActivity4 extends AppCompatActivity {
                             remarks.setText(ss);
 
                         } else if ((Integer.parseInt(numberofquestion.getText().toString()) > 30) && startenable == true) {
-                            errormessage = "MAXIMUM NUMBER OF QUESTION IS 30";
+                            errormessage = "ERROR: MAXIMUM NUMBER OF QUESTION IS 30";
                             SpannableString ss = new SpannableString(errormessage);
 
 
@@ -186,6 +192,8 @@ public class MainActivity4 extends AppCompatActivity {
                                 checkenable = true;
                                 choice1=select1;
                                 choice2=select2;
+                                execution=1;
+
 
 
                                 switch (choice2) {
@@ -248,6 +256,7 @@ public class MainActivity4 extends AppCompatActivity {
                     }
                     else if (choice2==2)
                     {
+                        remarks.setText("");
                         random(choice1, numOfQues, iteration, j, "");
 
                     }
@@ -259,7 +268,37 @@ public class MainActivity4 extends AppCompatActivity {
 
     }
 
-    void alphatosignal(int c1,int b1,int j1,int j2,String ans2)
+    @Override
+    public void onBackPressed() {
+        if(execution==0)
+        super.onBackPressed();
+        else
+        {
+            AlertDialog.Builder alertdialog = new AlertDialog.Builder(MainActivity4.this);
+            alertdialog.setTitle("EXIT PRACTICE SESSION");
+            alertdialog.setMessage("Do you want to exit in between practice?");
+            alertdialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i)
+                {
+                    //execution=0;
+                    //onBackPressed();
+                    MainActivity4.super.onBackPressed();
+                }
+            });
+
+            alertdialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+
+            alertdialog.show();
+        }
+    }
+
+    void alphatosignal(int c1, int b1, int j1, int j2, String ans2)
     {
         ans2=ans2.trim();
         String remarks2="";
@@ -267,6 +306,7 @@ public class MainActivity4 extends AppCompatActivity {
 
         if(j2==1)
         {
+            time2=System.currentTimeMillis();
             if(ans2.equals(""))
             {
                 remarks2="INCORRECT \n CORRECT ANSWER = "+a[q][1];
@@ -282,6 +322,7 @@ public class MainActivity4 extends AppCompatActivity {
                 SpannableString ss = new SpannableString(remarks2);
                 ss.setSpan(fcsgreen,0,remarks2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 remarks.setText(ss);
+                countcorrect++;
             }
             else
             {
@@ -291,6 +332,9 @@ public class MainActivity4 extends AppCompatActivity {
                 ss.setSpan(fcsred,0,remarks2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 remarks.setText(ss);
             }
+
+            timsum=timsum+(time2-time1);
+
             j=0;
         }
         else
@@ -307,12 +351,20 @@ public class MainActivity4 extends AppCompatActivity {
             if(j1<=b1)
             {
                 q=(int)(0+(Math.random()*range));
+                answer.setText("");//new
                 question.setText("Q) "+a[q][0]+" ("+j1+"/"+b1+")");
                 j=1;
+                time1=System.currentTimeMillis();
             }
             else
             {
-                remarks.setText("QUESTIONS COMPLETED");
+                //timeavg=(timsum/numOfQues)/1000.0;
+                timeavg=roundtime((timsum/numOfQues)/1000.0);
+                answer.setText("");
+                question.setText("");
+                execution=0;
+                remarks.setText("QUESTIONS COMPLETED    \n AVERAGE TIME TAKEN PER QUESTION = "+timeavg+"s \n CORRECT ANSWER ="+countcorrect+"/"+numOfQues);
+                checkenable=false;
                 start.setText("RESET");
                 reset1=1;
             }
@@ -329,6 +381,7 @@ public class MainActivity4 extends AppCompatActivity {
 
         if(j2==1)
         {
+            time2=System.currentTimeMillis();
             if(ans2.equals(""))
             {
                 remarks2="INCORRECT \n CORRECT ANSWER = "+a[q][0];
@@ -344,6 +397,7 @@ public class MainActivity4 extends AppCompatActivity {
                 SpannableString ss = new SpannableString(remarks2);
                 ss.setSpan(fcsgreen,0,remarks2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 remarks.setText(ss);
+                countcorrect++;
             }
             else
             {
@@ -353,6 +407,7 @@ public class MainActivity4 extends AppCompatActivity {
                 ss.setSpan(fcsred,0,remarks2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 remarks.setText(ss);
             }
+            timsum=timsum+(time2-time1);
             j=0;
         }
         else
@@ -369,12 +424,20 @@ public class MainActivity4 extends AppCompatActivity {
             if(j1<=b1)
             {
                 q=(int)(0+(Math.random()*range));
+                answer.setText("");//new
                 question.setText("Q) "+a[q][1]+" ("+j1+"/"+b1+")");
                 j=1;
+                time1=System.currentTimeMillis();
             }
             else
             {
-                remarks.setText("QUESTIONS COMPLETED");
+                //timeavg=(timsum/numOfQues)/1000.0;
+                timeavg=roundtime((timsum/numOfQues)/1000.0);
+                answer.setText("");
+                question.setText("");
+                execution=0;
+                remarks.setText("QUESTIONS COMPLETED    \n AVERAGE TIME TAKEN PER QUESTION = "+timeavg+"s \n CORRECT ANSWER ="+countcorrect+"/"+numOfQues);
+                checkenable=false;
                 start.setText("RESET");
                 reset1=1;
             }
@@ -402,7 +465,13 @@ public class MainActivity4 extends AppCompatActivity {
         }
         if(j1>b1)
         {
-            remarks.setText("QUESTIONS COMPLETED");
+            //timeavg=(timsum/numOfQues)/1000.0;
+            timeavg=roundtime((timsum/numOfQues)/1000.0);
+            answer.setText("");
+            question.setText("");
+            execution=0;
+            remarks.setText("QUESTIONS COMPLETED    \n AVERAGE TIME TAKEN PER QUESTION = "+timeavg+"s \n CORRECT ANSWER ="+countcorrect+"/"+numOfQues);
+            checkenable=false;
             start.setText("RESET");
             reset1=1;
         }
@@ -412,6 +481,7 @@ public class MainActivity4 extends AppCompatActivity {
         autoCompleteTextView=findViewById(R.id.autocompletetextview);
         autoCompleteTextView2=findViewById(R.id.autocompletetextview2);
         numberofquestion=findViewById(R.id.editTextNumber3);
+        //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         start=findViewById(R.id.button7);
         question=findViewById(R.id.textView14);
         question.setMovementMethod(new ScrollingMovementMethod());
@@ -420,8 +490,31 @@ public class MainActivity4 extends AppCompatActivity {
         noq.setMovementMethod(new ScrollingMovementMethod());
         noq.setHorizontallyScrolling(true);
         answer=findViewById(R.id.editTextTextPersonName2);
+        //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
+        //getWindow().setSoftInputMode(WindowManager.LayoutParams.FLAG_LOCAL_FOCUS_MODE);
         check=findViewById(R.id.button5);
         remarks=findViewById(R.id.textView11);
+        remarks.setMovementMethod(new ScrollingMovementMethod());
+
+    }
+    private void setupUIviews2()
+    {
+        autoCompleteTextView=findViewById(R.id.autocompletetextview);
+        autoCompleteTextView2=findViewById(R.id.autocompletetextview2);
+        numberofquestion=findViewById(R.id.editTextNumber3);
+        //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
+        start=findViewById(R.id.button7);
+        question=findViewById(R.id.textView14);
+        question.setMovementMethod(new ScrollingMovementMethod());
+        question.setHorizontallyScrolling(true);
+        noq=findViewById(R.id.textView4);
+        noq.setMovementMethod(new ScrollingMovementMethod());
+        noq.setHorizontallyScrolling(true);
+        answer=findViewById(R.id.editTextTextPersonName2);
+        //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
+        check=findViewById(R.id.button5);
+        remarks=findViewById(R.id.textView11);
+        remarks.setMovementMethod(new ScrollingMovementMethod());
 
 
 
@@ -531,7 +624,26 @@ public class MainActivity4 extends AppCompatActivity {
         remarks.setText("");
         random1=0;
         check.setText("CHECK");
+        timeavg=0;
+        timsum=0;
+        time2=0;
+        time1=0;
+        countcorrect=0;
         //select1=-1;
         //select2=-1;
+
+        answer.setText("");//new
+        numberofquestion.setText("");//new
+
+        execution=0;
+
+    }
+
+    double roundtime(double time)
+    {
+        time=time*1000;
+        time=Math.round(time);
+        time=time/1000;
+        return time;
     }
 }

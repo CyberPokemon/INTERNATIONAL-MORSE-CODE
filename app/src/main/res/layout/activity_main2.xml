@@ -10,9 +10,10 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="99dp"
-        android:layout_marginBottom="565dp"
+        android:layout_marginTop="192dp"
+        android:layout_marginBottom="472dp"
         android:text="MENU"
+        android:textColor="?android:textColorPrimary"
         android:textSize="50sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -22,8 +23,8 @@
     <TableLayout
         android:layout_width="409dp"
         android:layout_height="288dp"
-        android:layout_marginTop="84dp"
-        android:layout_marginBottom="193dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="169dp"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -76,6 +77,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="CONVERT TO ALPHABETS" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/b6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ABOUT" />
         </TableRow>
     </TableLayout>
 

@@ -1,8 +1,10 @@
 package com.example.internationalmorsecode;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +17,7 @@ public class MainActivity2 extends AppCompatActivity {
     Button two;
     Button three;
     Button four;
+    Button five;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +62,37 @@ public class MainActivity2 extends AppCompatActivity {
             }
 
         });
+        five.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intant = new Intent(getApplicationContext(), MainActivity7.class);
+                startActivity(intant);
+            }
+        });
 
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder alertdialog = new AlertDialog.Builder(MainActivity2.this);
+        alertdialog.setTitle("EXIT APP");
+        alertdialog.setMessage("Do you want to exit the app?");
+        alertdialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                finishAffinity();
+            }
+        });
+
+        alertdialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+
+        alertdialog.show();
     }
 
     private void setupUIviews()
@@ -69,6 +101,7 @@ public class MainActivity2 extends AppCompatActivity {
         two=findViewById(R.id.b2);
         three=findViewById(R.id.b3);
         four=findViewById(R.id.b4);
+        five=findViewById(R.id.b6);
 
     }
 }
